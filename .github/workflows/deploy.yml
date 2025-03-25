@@ -30,6 +30,18 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Check build output
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "Build failed: dist directory not found"
+            exit 1
+          fi
+          if [ ! -f "dist/index.html" ]; then
+            echo "Build failed: index.html not found"
+            exit 1
+          fi
+          echo "Build output looks good"
+
       - name: Create 404.html
         run: |
           cp dist/index.html dist/404.html
