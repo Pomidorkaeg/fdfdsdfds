@@ -43,6 +43,10 @@ jobs:
             echo "Build failed: dist directory not found"
             exit 1
           fi
+          if [ ! -f "dist/index.html" ]; then
+            echo "Build failed: index.html not found"
+            exit 1
+          fi
         
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -57,4 +61,10 @@ jobs:
           disable_nojekyll: false
           exclude_assets: .github
           commit_message: "Deploy from main branch"
-          full_commit_message: "Deploy from main branch [skip ci]" 
+          full_commit_message: "Deploy from main branch [skip ci]"
+          
+      - name: Check deployment
+        run: |
+          echo "Waiting for deployment to complete..."
+          sleep 30
+          curl -s -o /dev/null -w "%{http_code}" https://pomidorkaeg.github.io/fdfdsdfds/ | grep -q "200" || exit 1 
