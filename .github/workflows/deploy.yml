@@ -19,43 +19,19 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Clean install dependencies
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
 
       - name: Build
         run: npm run build
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          publish_branch: gh-pages
-          allow_empty_commit: false
-          keep_files: false
-          force_orphan: true
-          enable_jekyll: false
-          disable_nojekyll: false
-          exclude_assets: .github
-          commit_message: "Deploy from main branch"
-          full_commit_message: "Deploy from main branch [skip ci]"
-          
-      - name: Check build output
-        run: |
-          if [ ! -d "dist" ]; then
-            echo "Build failed: dist directory not found"
-            exit 1
-          fi
-          if [ ! -f "dist/index.html" ]; then
-            echo "Build failed: index.html not found"
-            exit 1
-          fi
-          
       - name: Create 404.html
         run: |
           cp dist/index.html dist/404.html
-          
-      - name: Deploy to GitHub Pages
+
+      - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -73,7 +49,7 @@ jobs:
       - name: Wait for deployment
         run: |
           echo "Waiting for deployment to complete..."
-          sleep 60
+          sleep 30
           
       - name: Check deployment
         run: |
@@ -84,7 +60,7 @@ jobs:
               exit 0
             fi
             echo "Attempt $i: Deployment not ready yet..."
-            sleep 30
+            sleep 15
           done
           echo "Deployment check failed"
           exit 1 

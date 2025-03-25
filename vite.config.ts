@@ -61,10 +61,8 @@ export default defineConfig(({ mode }) => ({
     // Добавляем кэширование для разработки
     cacheDir: '.vite',
     // Оптимизируем загрузку модулей
-    build: {
-      modulePreload: true,
-      cssCodeSplit: true
-    },
+    modulePreload: true,
+    cssCodeSplit: true,
     // Добавляем предварительную загрузку
     preload: true,
     // Оптимизируем изображения
