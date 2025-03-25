@@ -19,12 +19,30 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
+          cache: 'npm'
           
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            
       - name: Install dependencies
-        run: npm install
+        run: npm ci
         
       - name: Build
         run: npm run build
+        
+      - name: Check build output
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "Build failed: dist directory not found"
+            exit 1
+          fi
         
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -38,4 +56,5 @@ jobs:
           enable_jekyll: false
           disable_nojekyll: false
           exclude_assets: .github
-          commit_message: "Deploy from main branch" 
+          commit_message: "Deploy from main branch"
+          full_commit_message: "Deploy from main branch [skip ci]" 
