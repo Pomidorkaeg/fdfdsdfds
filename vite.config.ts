@@ -74,13 +74,7 @@ export default defineConfig(({ mode }) => ({
     }
   },
   plugins: [
-    react({
-      babel: {
-        plugins: [
-          ['@babel/plugin-transform-react-jsx', { runtime: 'automatic' }]
-        ]
-      }
-    })
+    react()
   ],
   resolve: {
     alias: {
