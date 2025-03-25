@@ -47,7 +47,11 @@ jobs:
             echo "Build failed: index.html not found"
             exit 1
           fi
-        
+          
+      - name: Create 404.html
+        run: |
+          cp dist/index.html dist/404.html
+          
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -63,8 +67,21 @@ jobs:
           commit_message: "Deploy from main branch"
           full_commit_message: "Deploy from main branch [skip ci]"
           
-      - name: Check deployment
+      - name: Wait for deployment
         run: |
           echo "Waiting for deployment to complete..."
-          sleep 30
-          curl -s -o /dev/null -w "%{http_code}" https://pomidorkaeg.github.io/fdfdsdfds/ | grep -q "200" || exit 1 
+          sleep 60
+          
+      - name: Check deployment
+        run: |
+          echo "Checking deployment..."
+          for i in {1..5}; do
+            if curl -s -o /dev/null -w "%{http_code}" https://pomidorkaeg.github.io/fdfdsdfds/ | grep -q "200"; then
+              echo "Deployment successful!"
+              exit 0
+            fi
+            echo "Attempt $i: Deployment not ready yet..."
+            sleep 30
+          done
+          echo "Deployment check failed"
+          exit 1 

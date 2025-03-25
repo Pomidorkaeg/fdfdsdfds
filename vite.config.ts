@@ -43,7 +43,7 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  // Для корректной работы на GitHub Pages
+  // Для корректной работы на GitHub Pages с HashRouter
   base: '/fdfdsdfds/',
   // Добавляем оптимизации для более быстрой разработки
   optimizeDeps: {
