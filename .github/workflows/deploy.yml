@@ -8,8 +8,12 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: main
       
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -33,4 +37,5 @@ jobs:
           force_orphan: true
           enable_jekyll: false
           disable_nojekyll: false
-          exclude_assets: .github 
+          exclude_assets: .github
+          commit_message: "Deploy from main branch" 
