@@ -22,29 +22,11 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
-      - name: Clean install dependencies
-        run: |
-          rm -rf node_modules package-lock.json
-          npm install
+      - name: Install dependencies
+        run: npm install
 
       - name: Build
         run: npm run build
-
-      - name: Check build output
-        run: |
-          if [ ! -d "dist" ]; then
-            echo "Build failed: dist directory not found"
-            exit 1
-          fi
-          if [ ! -f "dist/index.html" ]; then
-            echo "Build failed: index.html not found"
-            exit 1
-          fi
-          echo "Build output looks good"
-
-      - name: Create 404.html
-        run: |
-          cp dist/index.html dist/404.html
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
@@ -57,7 +39,6 @@ jobs:
           force_orphan: true
           enable_jekyll: false
           disable_nojekyll: false
-          exclude_assets: .github
           commit_message: "Deploy from main branch"
           full_commit_message: "Deploy from main branch [skip ci]"
           
